@@ -45,8 +45,8 @@ class Board
     print "|#{8 - row}"
     puts ''
   end
-end
 
-board = Board.new
-board.board[0][1] = 'X'
-board.render
+  def pos(coord)
+    @board[coord[0]][coord[1]]
+  end
+end

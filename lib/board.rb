@@ -39,7 +39,12 @@ class Board
     8.times do |column|
       # puts each of the columns in the specified row
       print "| "
-      print @board[column][7 - row]
+      cell = @board[column][7 - row]
+      if cell == ' '
+        print cell
+      else
+        print cell.icon
+      end
       print ' '
     end
     print "|#{8 - row}"

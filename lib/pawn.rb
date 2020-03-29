@@ -1,22 +1,26 @@
 class Pawn
   require_relative '../../chess/lib/board'
-  attr_accessor :pos, :board
+  attr_accessor :pos, :board, :icon
   @@directions = [[-1, 1], [0, 1], [0, 2], [1, 1]]
   def initialize(color, board)
     @color = color
-    @pawn = unicode(@color)
+    @icon = unicode
     @pos = nil
     @moves = []
     @board = board
   end
 
-  def unicode(color)
+  def unicode
     # sets @pawn to be the image of a pawn of the respective color
-    color == 'white' ? "\u2659" : "\u265F"
+    @color == 'black' ? "\u2659" : "\u265F"
   end
 
   def move(pos)
-
+    if valid_positions.include?(pos)
+      @board.board[pos[0]][pos[1]], @board.board[@pos[0]][@pos[1]] = @board.board[@pos[0]][@pos[1]], @board.board[pos[0]][pos[1]]
+    else
+      print 'That is not a valid move!'
+    end
   end
 
   def valid_positions
@@ -67,4 +71,3 @@ class Pawn
     # turns a pawn into a different piece when it reaches the other side
   end
 end
-

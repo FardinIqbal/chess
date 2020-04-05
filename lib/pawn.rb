@@ -1,6 +1,8 @@
 class Pawn
   require_relative '../../chess/lib/board'
-  attr_accessor :pos, :board, :icon
+  require_relative '../../chess/lib/movable'
+  include Movable
+  attr_accessor :pos, :icon, :board, :color
   @@directions = [[-1, 1], [0, 1], [0, 2], [1, 1]]
   def initialize(color, board)
     @color = color
@@ -15,19 +17,11 @@ class Pawn
     @color == 'black' ? "\u2659" : "\u265F"
   end
 
-  def move(pos)
-    if valid_positions.include?(pos)
-      @board.board[pos[0]][pos[1]], @board.board[@pos[0]][@pos[1]] = @board.board[@pos[0]][@pos[1]], @board.board[pos[0]][pos[1]]
-    else
-      print 'That is not a valid move!'
-    end
-  end
-
-  def valid_positions
+  def move_list
     positions = []
     positions << all_possible_positions[0] if top_left?
-    positions << all_possible_positions[1] if straight1?
-    positions << all_possible_positions[2] if straight2?
+    positions << all_possible_positions[1] if top1?
+    positions << all_possible_positions[2] if top2?
     positions << all_possible_positions[3] if top_right?
     positions_in_range(positions)
   end
@@ -42,13 +36,8 @@ class Pawn
     @@directions.map { |direction| add_arrays(@pos, direction) }
   end
 
-  def add_arrays(arr1, arr2)
-    [arr1[0] + arr2[0], arr1[1] + arr2[1]]
-  end
-
   def top_right?
     @pos[0] != 7 && @pos[1] != 7
-
   end
 
   def top_left?
@@ -59,11 +48,11 @@ class Pawn
     @pos[1] == 1
   end
 
-  def straight1?
+  def top1?
     @board.board[@pos[0]][@pos[1] + 1] == ' '
   end
 
-  def straight2?
+  def top2?
     @board.board[@pos[0]][@pos[1] + 2] == ' ' && first_move? && straight1?
   end
 

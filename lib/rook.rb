@@ -3,7 +3,7 @@ class Rook
   require_relative '../../chess/lib/movable'
   include Movable
 
-  attr_accessor :pos, :board, :icon
+  attr_accessor :pos, :board, :icon, :color
   def initialize(color, board)
     @color = color
     @board = board

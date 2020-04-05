@@ -1,0 +1,13 @@
+class Chess
+  require_relative 'bishop'
+  require_relative 'board'
+  require_relative 'king'
+  require_relative 'knight'
+  require_relative 'pawn'
+  require_relative 'queen'
+  require_relative 'rook'
+
+  def initialize
+    @board = Board.new
+  end
+end

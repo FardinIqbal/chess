@@ -2,7 +2,7 @@ class Queen
   require_relative '../../chess/lib/board'
   require_relative '../../chess/lib/movable'
   include Movable
-  attr_accessor :pos, :icon, :board
+  attr_accessor :pos, :icon, :board, :color
 
   def initialize(color, board)
     @board = board

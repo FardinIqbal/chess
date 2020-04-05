@@ -2,7 +2,8 @@ module Movable
 
   def move(pos)
     if move_list.include?(pos)
-      @board.board[pos[0]][pos[1]], @board.board[@pos[0]][@pos[1]] = @board.board[@pos[0]][@pos[1]], @board.board[pos[0]][pos[1]]
+      @board.board[pos[0]][pos[1]] = @board.board[@pos[0]][@pos[1]]
+      @board.board[@pos[0]][@pos[1]] = ' '
     else
       print 'That is not a valid move!'
     end
@@ -19,9 +20,17 @@ module Movable
 
     loop do
       next_pos = add_array(direction, @pos)
-      break unless valid_coord?(next_pos)
+      break unless in_range?(next_pos)
 
-      coordinates << next_pos
+      cell = @board.board[next_pos[0]][next_pos[1]]
+      if cell == ' '
+        coordinates << next_pos
+      elsif cell.color != @color
+        coordinates << next_pos
+        break
+      else
+        break
+      end
       direction = add_array(direction, [-1, 1])
     end
     coordinates
@@ -34,9 +43,17 @@ module Movable
 
     loop do
       next_pos = add_array(direction, @pos)
-      break unless valid_coord?(next_pos)
+      break unless in_range?(next_pos)
 
-      coordinates << next_pos
+      cell = @board.board[next_pos[0]][next_pos[1]]
+      if cell == ' '
+        coordinates << next_pos
+      elsif cell.color != @color
+        coordinates << next_pos
+        break
+      else
+        break
+      end
       direction = add_array(direction, [1, 1])
     end
     coordinates
@@ -49,9 +66,17 @@ module Movable
 
     loop do
       next_pos = add_array(direction, @pos)
-      break unless valid_coord?(next_pos)
+      break unless in_range?(next_pos)
 
-      coordinates << next_pos
+      cell = @board.board[next_pos[0]][next_pos[1]]
+      if cell == ' '
+        coordinates << next_pos
+      elsif cell.color != @color
+        coordinates << next_pos
+        break
+      else
+        break
+      end
       direction = add_array(direction, [1, -1])
     end
     coordinates
@@ -66,8 +91,100 @@ module Movable
       next_pos = add_array(direction, @pos)
       break unless valid_coord?(next_pos)
 
-      coordinates << next_pos
+      cell = @board.board[next_pos[0]][next_pos[1]]
+      if cell == ' '
+        coordinates << next_pos
+      elsif cell.color != @color
+        coordinates << next_pos
+        break
+      else
+        break
+      end
       direction = add_array(direction, [-1, -1])
+    end
+    coordinates
+  end
+
+  def horizontal
+  # returns all positions horizontal of the rook
+  left + right
+  end
+
+  def left
+    # returns all positions left of the rook
+    coordinates = []
+    @board.board.each_with_index do |row, index|
+      next if index >= @pos[0]
+
+      cell = @board.board[index][@pos[1]]
+      if cell == ' '
+        coordinates << [index, @pos[0]]
+      elsif cell.color != @color
+        coordinates << [index, @pos[0]]
+        break
+      else
+        break
+      end
+    end
+    coordinates
+  end
+
+  def right
+    # returns all the positions right of the rook
+    coordinates = []
+    @board.board.each_with_index do |row, index|
+      next if index <= @pos[0]
+
+      cell = @board.board[index][@pos[1]]
+      if cell == ' '
+        coordinates << [index, @pos[0]]
+      elsif cell.color != @color
+        coordinates << [index, @pos[0]]
+        break
+      else
+        break
+      end
+    end
+    coordinates
+  end
+
+  def vertical
+    # returns all vertical positions the rook can move to
+    backward + forward
+  end
+
+  def forward
+    # returns all positions forwards
+    coordinates = []
+    @board.board[@pos[0]].each_with_index do |cell, index|
+      next if index <= @pos[1]
+
+      if cell == ' '
+        coordinates << [@pos[0], index]
+      elsif cell.color != @color
+        coordinates << [@pos[0], index]
+        break
+      else
+        break
+      end
+    end
+    coordinates
+  end
+
+  def backward
+    # returns all positions backwards
+    coordinates = []
+    @board.board[@pos[0]].each_with_index do |cell, index|
+      next if index >= @pos[1]
+
+      if cell == ' '
+        coordinates << [@pos[0], index]
+      elsif cell.color != @color
+        coordinates << [@pos[0], index]
+        break
+      else
+        break
+      end
     end
     coordinates
   end
@@ -90,67 +207,5 @@ module Movable
 
   def in_range?(coord)
     coord[0] <= 7 && coord[0] >= 0 && coord[1] <= 7 && coord[1] >= 0
-  end
-
-  def horizontal
-  # returns all positions horizontal of the rook
-  left + right
-end
-
-  def left
-    # returns all positions left of the rook
-    coordinates = []
-    @board.board.each_with_index do |row, index|
-      next if index >= @pos[0]
-
-      break unless @board.board[index][@pos[1]] == ' '
-
-      coordinates << [index, @pos[1]]
-    end
-    coordinates
-  end
-
-  def right
-    # returns all the positions right of the rook
-    coordinates = []
-    @board.board.each_with_index do |row, index|
-      next if index <= @pos[0]
-
-      break unless @board.board[index][@pos[1]] == ' '
-
-      coordinates << [index, @pos[1]]
-    end
-    coordinates
-  end
-
-  def vertical
-    # returns all vertical positions the rook can move to
-    backward + forward
-  end
-
-  def forward
-    # returns all positions forwards
-    coordinates = []
-    @board.board[@pos[0]].each_with_index do |cell, index|
-      next if index <= @pos[1]
-
-      break unless cell == ' '
-
-      coordinates << [@pos[0], index] if cell == ' '
-    end
-    coordinates
-  end
-
-  def backward
-    # returns all positions backwards
-    coordinates = []
-    @board.board[@pos[0]].each_with_index do |cell, index|
-      next if index >= @pos[1]
-
-      break unless cell == ' '
-
-      coordinates << [@pos[0], index]
-    end
-    coordinates
   end
 end
